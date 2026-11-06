@@ -99,6 +99,9 @@
       '<button data-go="' + i + '" class="' + (i === st.li ? 'cur ' : '') + (save.solved[l.id] ? 'done ' : '') + (l.hidden ? 'q' : '') +
       '" title="' + esc(l.title) + '" aria-label="רמה ' + l.id + ': ' + esc(l.title) + (save.solved[l.id] ? ' (נפתרה)' : '') + (l.hidden ? ' (חוק נסתר)' : '') + '"' +
       (i === st.li ? ' aria-current="step"' : '') + '>' + l.id + '</button>').join('');
+    // on phones the selector scrolls sideways: keep the current level visible
+    const nav = $('levels'), cur = nav.querySelector('.cur');
+    if (cur && nav.scrollWidth > nav.clientWidth && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
   function renderIntro() {
@@ -426,7 +429,7 @@
     $('modal').innerHTML = '<div class="box" role="dialog" aria-modal="true" aria-labelledby="win-title"><h2 id="win-title">' + (last ? 'סיימת את אקסיומה!' : 'פתרת!') + '</h2>' +
       '<div class="stars" role="img" aria-label="דירוג: ' + starsTxt + '">' + stars + '</div>' +
       '<p>' + (st.hints === 0 ? 'בלי רמזים בכלל.' : 'השתמשת ב-' + st.hints + ' רמזים.') + '</p>' + reveal +
-      (last ? '<p>זה היה אב-טיפוס של 10 רמות. הרבה יותר כלים וחוקים עוד מחכים.</p>' : '') +
+      (last ? '<p>זה היה אב-טיפוס של ' + LEVELS.length + ' רמות. הרבה יותר כלים וחוקים עוד מחכים.</p>' : '') +
       '<div class="btns">' + (last ? '' : '<button type="button" class="btn primary" data-next="1">לרמה הבאה ←</button>') +
       '<button type="button" class="btn" data-replay="1">שחק שוב</button><button type="button" class="btn ghostbtn" data-close="1">סגור</button></div></div>';
     setModal(true);

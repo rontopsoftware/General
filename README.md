@@ -30,7 +30,7 @@ python3 -m http.server 8080   # ואז http://localhost:8080
 ```
 index.html               הדף
 src/engine.js            חוקים, בדיקת תקינות, פותר, חוקים נסתרים ודוגמאות
-src/levels.js            עשר הרמות (נוצר אוטומטית, לא לערוך ידנית)
+src/levels.js            הרמות (נוצר אוטומטית, לא לערוך ידנית)
 src/app.js, style.css    הממשק
 scripts/generate-levels.js   מחולל הרמות
 scripts/verify.js            בדיקה שלכל רמה פתרון יחיד

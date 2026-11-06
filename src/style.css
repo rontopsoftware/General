@@ -126,11 +126,12 @@ body.dragging, body.dragging * { cursor: grabbing !important; user-select: none;
    pending = dashed border + "…" badge; bad = thick solid border + diagonal stripes + "!" badge. */
 .cell.pending { border-style: dashed; border-width: 2px; border-color: #8f98ee; }
 .cell.pending::before, .cell.bad::before {
-  position: absolute; top: 3px; inset-inline-start: 3px; z-index: 2;
-  min-width: 17px; height: 17px; border-radius: 9px; padding: 0 3px; display: grid; place-items: center;
-  font-size: 12px; font-weight: 900; line-height: 1; pointer-events: none;
+  /* straddles the corner so it does not hide the piece in small cells */
+  position: absolute; top: -6px; inset-inline-start: -6px; z-index: 2;
+  min-width: 16px; height: 16px; border-radius: 9px; padding: 0 3px; display: grid; place-items: center;
+  font-size: 11px; font-weight: 900; line-height: 1; pointer-events: none; border: 2px solid var(--bg);
 }
-.cell.pending::before { content: "…"; background: #8f98ee; color: #10133a; padding-bottom: 4px; }
+.cell.pending::before { content: "…"; background: #8f98ee; color: #10133a; padding-bottom: 3px; }
 .cell.bad {
   border: 3px solid var(--bad);
   background: repeating-linear-gradient(45deg, #4a1730 0 7px, #34111f 7px 14px);
@@ -281,8 +282,9 @@ body.dragging, body.dragging * { cursor: grabbing !important; user-select: none;
   .tray { min-height: 0; padding-top: 2px; }
   .brand h1 { font-size: 19px; }
   .logo { width: 32px; height: 32px; }
-  #levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; width: 100%; }
-  #levels button { width: 100%; }
+  /* one scrollable row: 16 levels must not eat four rows of a small screen */
+  #levels { flex-wrap: nowrap; overflow-x: auto; gap: 6px; width: 100%; padding: 8px 2px 6px; scrollbar-width: thin; overscroll-behavior-x: contain; }
+  #levels button { flex: 0 0 44px; width: 44px; height: 44px; }
   .intro { padding: 8px 14px; margin-bottom: 8px; }
   .intro h2 { font-size: 19px; margin: 0 0 2px; }
   .intro p { font-size: 13.5px; line-height: 1.4; }
@@ -295,7 +297,9 @@ body.dragging, body.dragging * { cursor: grabbing !important; user-select: none;
     position: sticky; bottom: 0; z-index: 5; margin: 8px -16px 0; padding: 6px 16px calc(6px + env(safe-area-inset-bottom));
     background: linear-gradient(180deg, #0e102000 0, #0e1020ee 14px, #0e1020 100%); border-top: 1px solid #ffffff12;
   }
-  .tray { gap: 10px; }
+  /* up to six piece kinds stay on one row (never below the 44px touch target) */
+  .tray { gap: 8px; flex-wrap: nowrap; }
+  .chip { flex: 0 1 56px; min-width: 44px; width: auto; height: 52px; }
   .actions { margin-top: 8px; flex-wrap: nowrap; gap: 8px; }
   .actions .btn { flex: 1 1 0; padding-inline: 8px; white-space: nowrap; }
 
