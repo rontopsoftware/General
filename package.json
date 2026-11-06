@@ -1,0 +1,11 @@
+{
+  "name": "axiom",
+  "version": "0.1.0",
+  "description": "AXIOM — a logic puzzle where every piece is its own rule",
+  "private": true,
+  "scripts": {
+    "verify": "node scripts/test-engine.js && node scripts/verify.js",
+    "generate": "node scripts/generate-levels.js",
+    "serve": "python3 -m http.server 8080"
+  }
+}
