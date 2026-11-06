@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "verify": "node scripts/test-engine.js && node scripts/verify.js",
+    "smoke": "node scripts/ui-smoke.js",
     "generate": "node scripts/generate-levels.js",
     "serve": "python3 -m http.server 8080"
   }
