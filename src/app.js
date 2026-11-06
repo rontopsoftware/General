@@ -115,7 +115,12 @@
       return '<li><span class="ic">' + pieceSVG(sample) + '</span><div><strong>' + esc(meta.name) + '</strong>' +
         (isNew ? '<span class="tag">חדש</span>' : '') + '<p>' + esc(meta.rule) + '</p></div></li>';
     }).join('');
-    $('rules').innerHTML = '<h2>חוקי הכלים</h2><div class="legend"><ul>' + items + '</ul></div>';
+    const key = '<h2 class="keyh">איך לקרוא את הלוח</h2><ul class="key">' +
+      '<li><span class="sw pending" aria-hidden="true">…</span><span>מסגרת מקווקוות: הכלי עוד מחכה להשלמה. זו לא שגיאה.</span></li>' +
+      '<li><span class="sw bad" aria-hidden="true">!</span><span>אדום ומפוספס: סתירה, החוק של הכלי מופר.</span></li>' +
+      '<li><span class="sw rel" aria-hidden="true"></span><span>כחול בהיר: התאים שהחוק של הכלי מסתכל עליהם.</span></li>' +
+      '<li><span class="sw tray" aria-hidden="true">3</span><span>במגש: העיגול הוא כמה נשארו מהכלי. המספר הקטן בפינה הוא מקש קיצור. ב-⬡ המספר שבפנים הוא הערך של המונה.</span></li></ul>';
+    $('rules').innerHTML = '<h2>חוקי הכלים</h2><div class="legend"><ul>' + items + '</ul></div>' + key;
   }
 
   function renderExamples() {
@@ -167,6 +172,10 @@
         if (a.s === 'bad') cls += ' bad';
         else if (a.s === 'pending') cls += ' pending';
         title = a.msg;
+      } else if (a && a.hidden && a.s === 'bad') {
+        // The tray is empty and the mystery rule still fails: say so, so a player does not blame a neighbour.
+        cls += ' bad';
+        title = 'החוק של ◈ לא מתקיים כאן. בדוק שוב את מעבדת הגילוי.';
       }
       if (st.hintCell === i) cls += ' hint';
       html += '<button type="button" class="' + cls + '" data-i="' + i + '" role="gridcell" tabindex="' + (i === st.focusI ? 0 : -1) +
@@ -222,6 +231,10 @@
         (bad ? '<br>' + (a.s === 'bad' ? '<span class="ico" aria-hidden="true">✕</span> ' : '<span class="ico" aria-hidden="true">…</span> ') + esc(a.msg) : '') + again };
     }
     if (hp && hp[0] === 'Q') return { cls: '', html: '<b>◈ המסתורי:</b> החוק שלו נסתר. בדוק את הדוגמאות בצד.' };
+    // Mystery piece in the wrong place is usually the root cause when other pieces also look wrong.
+    if (total(rem) === 0 && st.an.some((a) => a && a.hidden && a.s === 'bad')) {
+      return { cls: 'bad', html: '<span class="ico" aria-hidden="true">✕</span> החוק של ◈ לא מתקיים במקום שבו הנחת אותו. בדוק שוב את מעבדת הגילוי. ייתכן שכלים אחרים סומנו באדום בגלל זה.' };
+    }
     const bads = [];
     st.an.forEach((a, i) => { if (a && a.s === 'bad' && !a.hidden) bads.push({ i, a }); });
     if (bads.length) return { cls: 'bad', html: '<span class="ico" aria-hidden="true">✕</span> ' + esc(bads[0].a.msg) };
@@ -285,6 +298,7 @@
   function update(focusI) {
     st.hintMsg = '';
     st.hintCell = -1;
+    st.hintTarget = -1;
     autoSelect();
     const rem = remaining();
     const lv = st.lv;
@@ -372,10 +386,18 @@
     }
     if (target < 0) {
       for (let i = 0; i < st.board.length; i++) {
-        if (sol[i] && !st.board[i]) { target = i; msg = 'במקום המסומן צריך לעמוד ' + symOf(sol[i]) + ' (' + nameOf(sol[i]) + ').'; break; }
+        if (sol[i] && !st.board[i]) {
+          target = i;
+          // Two stages: first point at the cell, only a second press names the piece.
+          msg = st.hintTarget === i
+            ? 'במקום המסומן צריך לעמוד ' + symOf(sol[i]) + ' (' + nameOf(sol[i]) + ').'
+            : 'בתא המסומן צריך לעמוד כלי. לחץ שוב על רמז אם אתה רוצה לדעת איזה.';
+          break;
+        }
       }
     }
     if (target < 0) return;
+    st.hintTarget = target;
     st.hints++;
     hintLog[st.li] = st.hints;
     st.hintCell = target;

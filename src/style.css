@@ -224,6 +224,14 @@ body.dragging, body.dragging * { cursor: grabbing !important; user-select: none;
 .legend strong { font-size: 14px; }
 .legend span.tag { background: var(--c-Q); color: #2a2100; font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 6px; margin-inline-start: 6px; vertical-align: 1px; }
 .legend p { color: #c0c6ea; font-size: 13px; }
+.keyh { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.key { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 13px; color: #c0c6ea; }
+.key li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; }
+.sw { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: 13px; background: #14183a; border: 1px solid #2a2f5c; }
+.sw.pending { border: 2px dashed #8f98ee; color: #8f98ee; }
+.sw.bad { border: 3px solid var(--bad); color: var(--bad); background: repeating-linear-gradient(45deg, #5a2145 0 5px, #3d1630 5px 10px); }
+.sw.rel { border-color: #a4abff; background: #252b66; }
+.sw.tray { border-radius: 50%; background: #2b3170; color: #fff; }
 
 /* discovery lab: full-width, four big boards side by side */
 .ex-note { color: #c0c6ea; font-size: 14px; margin-bottom: 12px; }
